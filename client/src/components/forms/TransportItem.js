@@ -31,6 +31,9 @@ const TranportItem = () => {
     };
   }, []);
 
+
+// Get registered transporters
+
   const getTransporters = (token) => {
     instance
       .get("/manufacturer/getTransporters", {
@@ -42,6 +45,8 @@ const TranportItem = () => {
         setTransporters(res.data);
       });
   };
+
+  // Formik 
 
   const id = Date.now().toString();
 
@@ -70,6 +75,7 @@ const TranportItem = () => {
         };
 
         try {
+
           socket?.emit('registerManufacturer',user._id)
           socket?.emit("submit order", {
             message,
@@ -80,7 +86,9 @@ const TranportItem = () => {
               resolve();
             });
           });
+
           navigate("/manufacturer");
+          
         } catch (error) {
           console.log("error sending order", error);
         }

@@ -44,8 +44,8 @@ Transporters can interact with orders through the following actions:
 - Navigate to the client directory: cd client
 - Install client dependencies: npm install
 - Start the server: npm start (from the root directory)
-- Start the client: npm start (from the client directory)
 - Build the project : npm run build (from the client directory)
+- Start the client: npm start (from the client directory)
 - Make sure you have MongoDB set up and running on your local machine.
 
 ## Technologies Used

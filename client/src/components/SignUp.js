@@ -2,13 +2,13 @@ import { useFormik } from "formik";
 import instance from "../Axios/axios";
 import { useNavigate } from "react-router-dom";
 import { validate } from "../utils/validation/signupValidation";
-import store from "../utils/redux/store.js";
 import { login as transporterLogin } from "../utils/redux/transporterSlice.js";
 import { login as manufacturerLogin } from "../utils/redux/manufacturerSlice.js";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const SignUp = () => {
+  const[errorMsg , setErrorMsg] = useState()
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -38,7 +38,7 @@ const SignUp = () => {
       alert(JSON.stringify(values, null, 2));
       const userRole = values.role;
       instance.post(userRole, values).then((res) => {
-        if (res.data?.savedUser) {
+        if (res.data?.status) {
           let userData = res.data.savedUser;
 
           // Redux
@@ -48,6 +48,8 @@ const SignUp = () => {
           localStorage.setItem(userRole, res.data.token);
 
           navigate(`/${userRole}`);
+        }else{
+          setErrorMsg(res?.data?.message)
         }
       });
     },
@@ -185,6 +187,9 @@ const SignUp = () => {
                   <div className="text-red-400">{formik.errors.password}</div>
                 ) : null}
               </div>
+            </div>
+            <div className="flex justify-center items-center">
+              <span className="text-base text-red-500 my-3">{errorMsg}</span>
             </div>
 
             <div>

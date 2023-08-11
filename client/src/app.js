@@ -15,6 +15,7 @@ import store, { persistor } from './utils/redux/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
 import OrderDetails from './components/OrderDetails.js';
 import ChatScreen from './components/chat/ChatScreen.js';
+import Error from './Pages/Error.js';
 
 const AppLayout  = () => {
     return (

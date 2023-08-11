@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout as transporterLogout } from "../utils/redux/transporterSlice.js";
 import { logout as manufacturerLogout } from "../utils/redux/manufacturerSlice.js";

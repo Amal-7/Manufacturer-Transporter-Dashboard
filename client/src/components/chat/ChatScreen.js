@@ -8,6 +8,7 @@ const socketConnection = socketIOClient('http://localhost:3000')
 
 
 const ChatScreen = ({user}) => {
+
     const {orderId} = useParams()
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -23,6 +24,7 @@ const ChatScreen = ({user}) => {
             getMessages(orderId,token)
         },[])
 
+    
     const getMessages = (orderId,token) => {
         instance.get('/orderDetails/messages',{
             headers : {

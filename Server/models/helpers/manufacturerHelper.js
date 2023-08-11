@@ -25,8 +25,11 @@ const manufacturerSignUp = (user) => {
             const payload = {data:savedUser}
             const secretKey = 'your-secret-key';
              const token = jwt.sign(payload, secretKey);
-             resolve({savedUser,token}) 
+             resolve({status:true,savedUser,token}) 
         }).catch(error => {
+            if(error.code ===11000){
+                reject({status:false , message :'User Already Exists'})
+            }
             reject(error) 
         })
     

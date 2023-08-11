@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import { validate } from "../utils/validation/loginValidation";
 import instance from "../Axios/axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {login as transporterLogin}  from '../utils/redux/transporterSlice.js';
 import {login as manufacturerLogin} from '../utils/redux/manufacturerSlice.js'
@@ -10,6 +10,7 @@ import {login as manufacturerLogin} from '../utils/redux/manufacturerSlice.js'
 
 const Login = ({user}) => {
 
+  const[errorMsg , setErrorMsg] = useState()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -36,12 +37,17 @@ useEffect(() => {
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
       instance.post(`/${user}/login`,values).then((res) => {
+        console.log(res,'response')
         if(res.data?.status) {
           user==='transporter' ? dispatch(transporterLogin(res.data.user)) : dispatch(manufacturerLogin(res.data.user))
           localStorage.setItem(user,res.data.token)
 
           navigate(`/${user}`)
+        }else{
+          setErrorMsg(res.data.message)
         }
+    }).catch((err) => {
+      console.log(err,'error login')
     })
     },
   });
@@ -50,14 +56,13 @@ useEffect(() => {
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Login 
+          Login
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="space-y-6">
           <form onSubmit={formik.handleSubmit}>
-           
             <div>
               <label
                 htmlFor="email"
@@ -105,14 +110,16 @@ useEffect(() => {
                 ) : null}
               </div>
             </div>
+            <div className="flex justify-center items-center">
+              <span className="text-base text-red-500 my-3">{errorMsg}</span>
+            </div>
 
             <div>
-              <button className="flex w-full justify-center rounded-md mb-2  bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <button className="flex w-full justify-center rounded-md mb-2   bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Login
               </button>
             </div>
           </form>
-          
         </div>
       </div>
     </div>

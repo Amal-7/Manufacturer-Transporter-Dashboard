@@ -9,7 +9,6 @@ const Transporter = () => {
   const [socket, setSocket] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState();
-  const [newMessage, setNewMessage] = useState([]);
   const [data, setData] = useState();
 
   const isLoggedIn = useSelector((store) => store.transporter.isLoggedIn);
