@@ -6,47 +6,56 @@ import { orderListManufacturer } from "../../utils/redux/orderSlice";
 
 const Manufacturer = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredData, setFilteredData] = useState([ ]);
+  const [filteredData, setFilteredData] = useState([]);
   const [data, setData] = useState([]);
 
-  const isLoggedIn = useSelector(store => store.manufacturer.isLoggedIn)
-  const user = useSelector(store => store.manufacturer.user)
-  const dispatch = useDispatch()
-  const navigate= useNavigate()
+  const isLoggedIn = useSelector((store) => store.manufacturer.isLoggedIn);
+  const user = useSelector((store) => store.manufacturer.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if(!isLoggedIn) {
-      navigate('/')
+    if (!isLoggedIn) {
+      navigate("/");
     }
-    const token = localStorage.getItem('manufacturer')
+    const token = localStorage.getItem("manufacturer");
 
-    getOrderDetails(token)
-  },[])
+    getOrderDetails(token);
+  }, []);
 
-  const getOrderDetails =  (token) => {
-      instance.get('/orderDetails', {
-       
+  const getOrderDetails = (token) => {
+    instance
+      .get("/orderDetails", {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        params : user
-      }).then((res) => {
-        if(res.data){
-        setData(res?.data)
-        setFilteredData(res?.data)
-          dispatch(orderListManufacturer(res.data)) 
-        }
-        
-      }).catch(err => {
+        params: user,
       })
-  }
+      .then((res) => {
+        if (res.data) {
+          setData(res.data);
+          setFilteredData(res.data);
+          dispatch(orderListManufacturer(res.data));
+        }
+      })
+      .catch((err) => {});
+  };
 
   const handleSearch = () => {
-    const searchResult = data.filter((item) =>
-      item.manufacturer.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const searchResult = data.filter((item) => {
+      if (
+        item?.orderDetails?.orderId.includes(searchQuery) ||
+        item?.orderDetails?.to.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item?.orderDetails?.from.toLowerCase().includes(searchQuery.toLowerCase())
+      ) {
+        return item;
+      }
+
+
+    });
 
     setFilteredData(searchResult);
+    setSearchQuery('')
   };
 
   return (
@@ -63,13 +72,13 @@ const Manufacturer = () => {
         />
         <button
           className="px-4 py-2 ml-2 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
-          onClick={() => setSearchQuery("")}
+          onClick={handleSearch}
         >
           Search
         </button>
       </div>
 
-      <div>
+      <div className="my-3">
         <button className="px-4 py-2 ml-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700">
           <Link to={"/manufacturer/transport"}>Transport an Item</Link>
         </button>
@@ -92,13 +101,24 @@ const Manufacturer = () => {
         <tbody className="divide-y divide-gray-200">
           {filteredData?.map((item) => (
             <tr key={item._id}>
-              <td className="px-6 py-4 whitespace-nowrap"><Link to={`/manufacturer/orderDetails/${item.orderDetails.orderId}`}>{item.orderDetails.orderId}</Link></td>
               <td className="px-6 py-4 whitespace-nowrap">
-                {item.recipient.fullName}
+                <Link
+                  className="text-blue-500"
+                  to={`/manufacturer/orderDetails/${item?.orderDetails?.orderId}`}
+                >
+                  {item?.orderDetails?.orderId}
+                </Link>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {item?.recipient?.fullName}
               </td>
               <td className="px-6 py-4 flex flex-wrap whitespace-nowrap">
                 <button className="px-4 py-2 ml-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700">
-                  <Link to={`/manufacturer/reply/${item.orderDetails.orderId}`}>Send message</Link>
+                  <Link
+                    to={`/manufacturer/reply/${item?.orderDetails?.orderId}`}
+                  >
+                    Send message
+                  </Link>
                 </button>
               </td>
             </tr>

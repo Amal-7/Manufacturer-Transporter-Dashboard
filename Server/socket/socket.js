@@ -29,7 +29,9 @@ function initializeSocket (server) {
         socket.on('submit order',(order ) => {
           
             const selectedTransporter = transporterSockets[order.message.selectedTransporterId] 
+            const selectedManufacturer = manufacturerSockets[order.message.sender._id]
             createOrder(order?.message).then(() => {
+                io.to(selectedManufacturer).emit('order processed')
                 io.to(selectedTransporter).emit('newOrder',order)
             })
         })
@@ -41,9 +43,11 @@ function initializeSocket (server) {
         socket.on('sendMessage' ,(message) => {
             
             createMessage(message).then(()=>{
+
             socket.to(message.commonId).emit('recieveMessage',message)
 
             }).catch((err) => {
+
             })
         })
 

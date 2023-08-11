@@ -44,10 +44,8 @@ const Transporter = () => {
     }).then((res) => {
       if(res.data){
       setData(res.data)
-      setFilteredData(res.data)     
-         
-          dispatch(orderListTransporter(res?.data))
-     
+      setFilteredData(res.data)        
+     dispatch(orderListTransporter(res?.data))
       }
     }).catch(err => {
     })
@@ -64,19 +62,28 @@ const Transporter = () => {
         ...prevMsg,
         order.message
       ])
-      orderStore.push(order.message)
-      dispatch(orderListTransporter(orderStore))
+      
+      
+      dispatch(orderListTransporter([...orderStore,order.message]))
     });
   }, [socket]);
 
  
 
   const handleSearch = () => {
-    const searchResult = data.filter((item) =>
-      item.manufacturer.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const searchResult = data.filter((item) =>{
+    if (
+      item?.orderDetails?.orderId.includes(searchQuery) ||
+      item?.orderDetails?.to.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item?.orderDetails?.from.toLowerCase().includes(searchQuery.toLowerCase())
+    ) {
+      return item;
+    }
+
+  });
 
     setFilteredData(searchResult);
+    setSearchQuery('')
   };
 
   return (
@@ -93,7 +100,7 @@ const Transporter = () => {
         />
         <button
           className="px-4 py-2 ml-2 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-700"
-          onClick={() => setSearchQuery("")}
+          onClick={handleSearch}
         >
           Search
         </button>
@@ -116,7 +123,7 @@ const Transporter = () => {
         <tbody className="divide-y divide-gray-200">
           {filteredData?.map((item) => (
             <tr key={item._id}>
-              <td className="px-6 py-4 whitespace-nowrap"><Link to={`/transporter/orderDetails/${item.orderDetails.orderId}`}>{item.orderDetails.orderId}</Link></td>
+              <td className="px-6 py-4 whitespace-nowrap"><Link className="text-blue-500" to={`/transporter/orderDetails/${item.orderDetails.orderId}`}>{item.orderDetails.orderId}</Link></td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {item.sender.fullName}
               </td>
