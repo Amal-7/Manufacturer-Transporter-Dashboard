@@ -1,5 +1,5 @@
 import {Server} from 'socket.io'
-import { createMessage, createOrder } from '../models/helpers/messageHelper.js';
+import { createMessage, createOrder } from '../messageHelper.js';
 
 let io ;
 

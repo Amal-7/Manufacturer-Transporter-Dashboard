@@ -1,6 +1,6 @@
 import express from 'express' ;
 import { getTransportersList, manufacturerLogin, signUpManufacturer } from '../controllers/manufacturerController.js';
-import verifyToken from '../jwt/verifyToken.js';
+import verifyToken from '../models/helpers/jwt/verifyToken.js';
 var router = express.Router()
 
 // SignUp

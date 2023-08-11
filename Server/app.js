@@ -1,5 +1,4 @@
 import express from 'express';
-import path from 'path';
 import manufacturerRouter from './routes/manufacturer.js';
 import transporterRouter from './routes/transporter.js';
 import orderDetailsRouter from './routes/orderDetails.js'
@@ -7,7 +6,7 @@ import connection from './models/connection/connection.js';
 import dotenv from 'dotenv'
 import cors from "cors"
 import http from 'http'
-import { initializeSocket } from './socket/socket.js';
+import { initializeSocket } from './models/helpers/socket/socket.js';
 dotenv.config()
 
 

@@ -1,6 +1,6 @@
 import  express from "express";
 import { messages, orders, transporterOrder } from "../controllers/orderController.js";
-import verifyToken from "../jwt/verifyToken.js";
+import verifyToken from "../models/helpers/jwt/verifyToken.js";
 var router = express.Router()
 
 router.get('/',verifyToken, orders)
